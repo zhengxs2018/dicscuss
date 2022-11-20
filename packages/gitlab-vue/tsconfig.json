@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "extends": "../../common/profiles/tsconfig-common.json",
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "../gitlab-api"
+    },
+    {
+      "path": "./tsconfig.esm.json"
+    },
+    {
+      "path": "./tsconfig.cjs.json"
+    }
+  ]
+}

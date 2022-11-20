@@ -1,0 +1,38 @@
+{
+  "name": "@zhengxs/gitlab-vue",
+  "version": "1.0.0-alpha.0",
+  "main": "./lib/index.js",
+  "module": "./es/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    "require": "./lib/index.js",
+    "import": "./es/index.js"
+  },
+  "files": [
+    "es",
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "scripts": {
+    "watch": "tsc -b -w",
+    "build": "tsc -b",
+    "clean": "rimraf es lib *.tsbuildinfo"
+  },
+  "peerDependencies": {
+    "axios": "*",
+    "vue": "3"
+  },
+  "dependencies": {
+    "@zhengxs/gitlab-api": "workspace:*",
+    "tslib": "^2.4.1"
+  },
+  "devDependencies": {
+    "axios": "^1.1.3",
+    "vue": "^3.2.39"
+  },
+  "author": "zhengxs2018",
+  "license": "MIT"
+}

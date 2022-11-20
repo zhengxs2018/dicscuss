@@ -1,0 +1,52 @@
+{
+  "name": "github-sdk-for-javascript",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "build": "pnpm -r build",
+    "watch": "pnpm -r watch",
+    "clean": "pnpm -r clean",
+    "lint": "pnpm _phase:lint && pnpm _phase:format --check && pnpm _phase:cspell -s --cache",
+    "format": "pnpm _phase:format --write",
+    "ci": "pnpm _phase:format --no-color --check && pnpm _phase:lint --no-color && pnpm _phase:cspell --no-color",
+    "_phase:format": "prettier \"**/*.{md,yaml}\" --loglevel=warn --plugin=@trivago/prettier-plugin-sort-imports",
+    "_phase:lint": "eslint \"**/*.{js,ts}\"",
+    "_phase:cspell": "cspell \"**/*.{js,ts,md,json}\""
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^3.4.0",
+    "@types/eslint": "^8.4.6",
+    "@types/node": "^16.11.66",
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "@typescript-eslint/parser": "^5.40.0",
+    "cspell": "^6.12.0",
+    "eslint": "^8.25.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-typescript": "^3.5.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-tsdoc": "^0.2.17",
+    "eslint-plugin-unicorn": "^44.0.2",
+    "gh-pages": "^4.0.0",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "tsconfig-paths": "^4.1.0",
+    "typescript": "^4.8.4"
+  },
+  "packageManager": "pnpm@7.0.0",
+  "engines": {
+    "node": ">=14"
+  },
+  "author": {
+    "name": "zhengxs2018",
+    "url": "https://www.mediinfo.cn"
+  },
+  "maintainers": [
+    {
+      "name": "阿森",
+      "email": "zhengxiansen@mediinfo.com.cn"
+    }
+  ],
+  "license": "SEE LICENSE IN LICENSE"
+}
