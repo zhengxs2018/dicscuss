@@ -3,6 +3,7 @@ import { Gitlab, Notes } from '@zhengxs/gitlab-api'
 
 import { useActiveIssue } from './use_issue'
 import { useSingleton } from './use_singleton'
+import { useAxios } from './use_axios'
 
 /** @internal */
 const GITLAB_NOTES_INJECT_KEY = Symbol.for('gitlab#notes')
@@ -10,9 +11,17 @@ const GITLAB_NOTES_INJECT_KEY = Symbol.for('gitlab#notes')
 export type NotesProvider = {
   filter: Ref<Gitlab.Filter>
   items: Ref<Gitlab.Note[]>
+  pageCount: Ref<number>
+  loading: Ref<boolean>
+  error: Ref<string | null>
+  isFirst: Ref<boolean>
+  isEnd: Ref<boolean>
   total: Ref<number>
-  search: (args?: Omit<Gitlab.Filter, 'per_page'>) => Promise<void>
+  search: (args?: Omit<Partial<Gitlab.Filter>, 'page'>) => Promise<void>
   next: () => Promise<void>
+  prev: () => Promise<void>
+  loadMore: () => Promise<void>
+  loadPage: (page: number) => Promise<void>
   create: (payload: { body: string }) => Promise<any>
 }
 
@@ -45,32 +54,67 @@ export const useActiveNotes = () => {
 
     const items = ref<Gitlab.Note[]>([])
     const total = ref(0)
+    const pageCount = computed(() =>  {
+      return Math.ceil(total.value / filter.value.per_page)
+    })
 
-    const search = async () => {
+    const isFirst = computed(() => filter.value.page === 1)
+    const isEnd = computed(() => pageCount.value === filter.value.page)
+
+    const { loading, error, send } = useAxios<Gitlab.Filter>(
+      (params, config) => {
+        return rest.value!.index(params, config)
+      },
+    )
+
+    const search = async (args?: Omit<Partial<Gitlab.Filter>, 'page'>) => {
       const params = {
         ...filter.value,
+        ...args,
         page: 1,
       }
 
-      const res = await rest.value!.index(params)
+      const res = await send(params)
 
       filter.value = params
       items.value = res.items
       total.value = res.total
     }
 
-    const next = async () => {
+    const loadPage = async (page: number) => {
+      const args = filter.value
+      const params = {
+        ...args,
+        page,
+      }
+
+      const res = await send(params)
+
+      filter.value = params
+      items.value = res.items
+      total.value = res.total
+    }
+
+    const loadMore = async () => {
       const args = filter.value
       const params = {
         ...args,
         page: args.page + 1,
       }
 
-      const res = await rest.value!.index(params)
+      const res = await send(params)
 
       filter.value = params
       items.value = items.value.concat(res.items)
       total.value = res.total
+    }
+
+    const prev = () => {
+      return isFirst.value ? Promise.resolve() : loadPage(filter.value.page - 1)
+    }
+
+    const next = () => {
+      return isEnd.value ? Promise.resolve() : loadPage(filter.value.page + 1)
     }
 
     const create = async (payload: { body: string }) => {
@@ -79,11 +123,19 @@ export const useActiveNotes = () => {
 
     return {
       filter,
+      loading,
+      error,
       items,
       total,
+      isFirst,
+      isEnd,
+      pageCount,
       search,
+      loadMore,
       create,
+      prev,
       next,
+      loadPage,
     }
   })
 }

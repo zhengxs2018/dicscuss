@@ -16,6 +16,7 @@ const content = ref()
 
 const handleSubmit = async () => {
   await create({ body: content.value })
+
   content.value = ''
 
   await search()
@@ -37,7 +38,7 @@ const handleSubmit = async () => {
 
     <div class="discuss-new-comment-footer">
       <span class="discuss-current-user">
-        <span>当前用户 - {{ currentUser.username }} - </span>
+        <!-- <span>当前用户 - {{ currentUser.username }} - </span> -->
         <a class="discuss-logout" @click="logout()"> 退出登录 </a>
       </span>
 

@@ -3,7 +3,6 @@ import { PropType } from 'vue'
 import { format } from 'timeago.js'
 
 import { Gitlab } from '@zhengxs/gitlab-api'
-import { useCurrentUser } from '@zhengxs/gitlab-vue'
 
 import DiscussAvatar from '../base/DiscussAvatar.vue'
 import DiscussMarkdownPreview from './DiscussMarkdownPreview.vue'
@@ -14,8 +13,6 @@ defineProps({
     required: true,
   },
 })
-
-const { data: currentUser } = useCurrentUser()
 </script>
 
 <template>
@@ -26,7 +23,6 @@ const { data: currentUser } = useCurrentUser()
 
     <div class="discuss-comment-body">
       <div class="discuss-comment-header">
-        <!-- author - username - link to profile page -->
         <div class="discuss-comment-author">
           <a
             :href="item.author.web_url"
@@ -38,7 +34,6 @@ const { data: currentUser } = useCurrentUser()
           </a>
         </div>
 
-        <!-- created-at -->
         <div class="discuss-comment-created-at">
           {{ format(item.created_at, 'zh_CN') }}
         </div>

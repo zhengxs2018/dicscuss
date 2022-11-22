@@ -10,6 +10,11 @@
   text-decoration: none;
 }
 
+.discuss a.is-disabled {
+  cursor: not-allowed;
+  color: #a3aab1;
+}
+
 .discuss-header {
   padding-bottom: 10px;
   border-bottom: 1px solid var(--vp-c-divider-light);
@@ -30,4 +35,9 @@
 
 .discuss-header-comments-count {
   font-weight: 500;
+}
+
+.discuss-pagination-link {
+  display: inline-block;
+  padding: 0 6px;
 }

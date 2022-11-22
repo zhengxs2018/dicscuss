@@ -15,8 +15,8 @@ await gitlab.loginWithRedirect({
   responseType: import.meta.env.VITE_APP_GITLAB_RESPONSE_TYPE
 })
 
-if (import.meta.env.DEV) {
-  import.meta.glob('./__mocks__/**/*.mock.ts', { eager: true })
-}
+// if (import.meta.env.DEV) {
+//   import.meta.glob('./__mocks__/**/*.mock.ts', { eager: true })
+// }
 
 createApp(App).mount('#app')

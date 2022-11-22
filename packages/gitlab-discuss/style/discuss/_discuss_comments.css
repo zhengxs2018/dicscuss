@@ -39,3 +39,9 @@
   cursor: default;
   color: #a3aab1;
 }
+
+.discuss-pagination {
+  display: flex;
+  justify-content: space-between;
+  color: #a3aab1;
+}

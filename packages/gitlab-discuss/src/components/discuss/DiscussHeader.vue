@@ -31,16 +31,3 @@ const { total } = useActiveNotes()
     </div>
   </div>
 </template>
-
-<style>
-.discuss-header {
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--vp-c-divider-light);
-  margin-bottom: 10px;
-  overflow: hidden;
-}
-
-.discuss-header-right {
-  float: right;
-}
-</style>
