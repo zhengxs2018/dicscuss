@@ -31,6 +31,7 @@
 - [Gitlab](https://about.gitlab.com/)
 - [Vssue](https://github.com/meteorlxy/vssue)
 - [Vitepress](https://vitepress.vuejs.org/)
+- [oidc-client](https://github.com/IdentityModel/oidc-client-js)
 - And more.
 
 ## License
