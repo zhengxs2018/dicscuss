@@ -1,0 +1,41 @@
+.discuss-comment {
+  margin: 15px 0;
+}
+
+.discuss-comment-avatar {
+  float: left;
+}
+
+.discuss-comment-body {
+  margin-left: 70px;
+}
+
+.discuss-comment-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border: 1px solid var(--dc-border);
+  border-bottom: none;
+}
+
+.discuss-comment-main {
+  padding: 15px;
+  border: 1px solid #eaecef;
+}
+
+.discuss-comment-footer {
+  padding: 10px 15px;
+  overflow: hidden;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border: 1px solid var(--dc-border);
+  border-top: none;
+}
+
+.discuss-comment-created-at {
+  float: right;
+  cursor: default;
+  color: #a3aab1;
+}

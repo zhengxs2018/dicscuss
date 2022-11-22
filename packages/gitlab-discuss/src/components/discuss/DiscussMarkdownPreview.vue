@@ -8,18 +8,16 @@ const props = defineProps({
   content: {
     type: String,
     required: true,
-  }
+  },
 })
 
 const { loading, error, data } = useMarkdownPreview(toRef(props, 'content'))
 </script>
 
 <template>
-  <div class="markdown-preview">
-    <div v-if="loading">Loading...</div>
-    <div v-else-if="error">{{ content }}</div>
-    <!-- eslint-disable vue/no-v-html -->
-    <div v-else v-html="data"></div>
-    <!-- eslint-enable vue/no-v-html -->
-  </div>
+  <div v-if="loading">Loading...</div>
+  <div v-else-if="error">{{ content }}</div>
+  <!-- eslint-disable vue/no-v-html -->
+  <div v-else v-html="data" class="markdown-preview"></div>
+  <!-- eslint-enable vue/no-v-html -->
 </template>

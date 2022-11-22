@@ -5,6 +5,11 @@
   box-sizing: border-box;
 }
 
+.discuss a {
+  color: var(--dc-brand);
+  text-decoration: none;
+}
+
 .discuss-header {
   padding-bottom: 10px;
   border-bottom: 1px solid var(--vp-c-divider-light);
@@ -21,4 +26,8 @@
   display: block;
   clear: both;
   content: '';
+}
+
+.discuss-header-comments-count {
+  font-weight: 500;
 }

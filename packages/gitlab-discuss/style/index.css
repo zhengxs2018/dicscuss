@@ -5,4 +5,5 @@
 
 @import "./discuss/_discuss.css";
 @import "./discuss/_discuss_new_comment.css";
-@import "./discuss/_list.css"
+@import "./discuss/_discuss_comments.css";
+@import "./discuss/_markdown_gitlab.css";

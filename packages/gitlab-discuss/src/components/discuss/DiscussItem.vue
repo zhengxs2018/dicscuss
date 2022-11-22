@@ -47,10 +47,6 @@ const { data: currentUser } = useCurrentUser()
       <div class="discuss-comment-main">
         <DiscussMarkdownPreview :content="item.body"/>
       </div>
-
-      <div class="discuss-comment-footer">
-        <!-- pass -->
-      </div>
     </div>
   </div>
 </template>
