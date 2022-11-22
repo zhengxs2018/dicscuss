@@ -45,3 +45,9 @@
   justify-content: space-between;
   color: #a3aab1;
 }
+
+.discuss-pagination-select {
+  appearance: auto;
+  border: 1px solid var(--dc-brand);
+  border-radius: 3px;
+}
