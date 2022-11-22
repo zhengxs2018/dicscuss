@@ -5,6 +5,16 @@
   box-sizing: border-box;
 }
 
+.discuss a {
+  color: var(--dc-brand);
+  text-decoration: none;
+}
+
+.discuss a.is-disabled {
+  cursor: not-allowed;
+  color: #a3aab1;
+}
+
 .discuss-header {
   padding-bottom: 10px;
   border-bottom: 1px solid var(--vp-c-divider-light);
@@ -21,4 +31,17 @@
   display: block;
   clear: both;
   content: '';
+}
+
+.discuss-header-comments-count {
+  font-weight: 500;
+}
+
+.discuss-pagination-link {
+  display: inline-block;
+  padding: 0 6px;
+}
+
+.discuss-comments-empty {
+  text-align: center;
 }

@@ -17,7 +17,9 @@ const normalizeOptions = ({
   authority = 'https://gitlab.com',
   apiVersion = 'v4',
   clientId,
+  clientSecret = null,
   redirectURI = '/connect/gitlab/callback.html',
+  postLogoutRedirectURI = '/',
   userStore = new WebStorageStateStore({
     store: window.sessionStorage,
   }),
@@ -25,7 +27,9 @@ const normalizeOptions = ({
   authority,
   apiVersion,
   clientId,
+  clientSecret,
   redirectURI,
+  postLogoutRedirectURI,
   userStore,
 })
 
@@ -33,9 +37,13 @@ const normalizeOptions = ({
 const normalizeSigninRedirectArgs = ({
   state = random(),
   callbackURL = window.location.href,
+  responseType = 'code',
+  scope = 'api',
 }: GitlabSDKSigninRedirectArgs): Required<GitlabSDKSigninRedirectArgs> => ({
   state,
   callbackURL,
+  responseType,
+  scope,
 })
 
 export class GitlabSDK {
@@ -80,8 +88,13 @@ export class GitlabSDK {
   }
 
   unstable__isSigninRedirect() {
-    const hash = new URLSearchParams(window.location.hash.slice(1))
-    return hash.has('access_token')
+    const currentURL = window.location.href
+    const redirectURI = this.options.redirectURI.toString()
+
+    if (currentURL.indexOf(redirectURI) === -1) return
+    return (
+      currentURL.indexOf('access_token=') > 0 || currentURL.indexOf('code=') > 0
+    )
   }
 
   async getUser(config?: AxiosRequestConfig): Promise<Gitlab.User> {
@@ -91,7 +104,8 @@ export class GitlabSDK {
 
   signinRedirect(args: GitlabSDKSigninRedirectArgs = {}): Promise<never> {
     const { authority, redirectURI, clientId } = this.options
-    const { state, callbackURL } = normalizeSigninRedirectArgs(args)
+    const { state, scope, responseType, callbackURL } =
+      normalizeSigninRedirectArgs(args)
 
     const url = new URL('/oauth/authorize', authority)
     const combineURL = new URL(redirectURI, document.baseURI)
@@ -99,7 +113,11 @@ export class GitlabSDK {
     url.searchParams.set('client_id', clientId)
     url.searchParams.set('state', state)
     url.searchParams.set('redirect_uri', combineURL.toString())
-    url.searchParams.set('response_type', 'token')
+    url.searchParams.set('response_type', responseType)
+
+    if (responseType === 'code') {
+      url.searchParams.set('scope', scope)
+    }
 
     this.userStore.set(state, callbackURL)
 
@@ -109,23 +127,55 @@ export class GitlabSDK {
   }
 
   async signinRedirectCallback(url?: string): Promise<never> {
-    const hash = new URLSearchParams(window.location.hash.slice(1))
-    if (hash.has('access_token') === false) {
-      throw new Error('无效的 token')
-    }
-
-    const state = hash.get('state')!
-    const accessToken = hash.get('access_token')!
-
-    this.token.restore(accessToken)
+    const { state, accessToken } = await this.exchangeToken()
 
     const callbackURL = url || this.userStore.get(state)
 
-    this.userStore.remove(state)
+    this.token.restore(accessToken)
 
     window.location.replace(callbackURL || '/')
 
     return asyncNever
+  }
+
+  private async exchangeCode({ state, code }: { state: string; code: string }) {
+    const { clientId, clientSecret, redirectURI } = this.options
+    const combineURL = new URL(redirectURI, document.baseURI)
+
+    const params = {
+      client_id: clientId,
+      client_secret: clientSecret,
+      code: code,
+      grant_type: 'authorization_code',
+      redirect_uri: combineURL.toString(),
+    }
+
+    const response = await this.client.post('/oauth/token', null, { params })
+
+    return {
+      state,
+      accessToken: response.data.access_token,
+    } as const
+  }
+
+  private async exchangeToken() {
+    const hashParams = new URLSearchParams(window.location.hash.slice(1))
+    if (hashParams.has('access_token') === true) {
+      return {
+        state: hashParams.get('state')!,
+        accessToken: hashParams.get('access_token')!,
+      } as const
+    }
+
+    const searchParams = new URLSearchParams(window.location.search)
+    if (searchParams.has('code') === true) {
+      return this.exchangeCode({
+        state: searchParams.get('code')!,
+        code: searchParams.get('code')!,
+      })
+    }
+
+    return Promise.reject(new Error('A code is required'))
   }
 
   async loginWithRedirect(
@@ -138,6 +188,12 @@ export class GitlabSDK {
     if (this.unstable__isAuthenticated() === false) {
       return this.signinRedirect(args)
     }
+  }
+
+  signoutRedirect() {
+    const postLogoutRedirectURI = this.options.postLogoutRedirectURI
+    this.userStore.clear()
+    window.location.replace(postLogoutRedirectURI.toString())
   }
 
   async markdown(text: string, config?: AxiosRequestConfig): Promise<string> {

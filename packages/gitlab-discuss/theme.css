@@ -1,13 +1,19 @@
 :root {
+  --dc-brand: #1385f0;
+  --dc-brand-light: #3da0fc;
+  --dc-brand-lighter: #66b5ff;
+  --dc-brand-dark: #0664c9;
+  --dc-brand-darker: #0049a3;
+
   --dc-border: rgba(60, 60, 60, 0.12);
 
-  --dc-icon-fill: #1385f0;
+  --dc-icon-fill: var(--dc-brand);
 
-  --dc-button-primary-text: #1385f0;
-  --dc-button-primary-border: #1385f0;
+  --dc-button-primary-text: var(--dc-brand);
+  --dc-button-primary-border: var(--dc-brand);
 
-  --dc-button-default-text: #1385f0;
-  --dc-button-default-border: #1385f0;
+  --dc-button-default-text: var(--dc-brand);
+  --dc-button-default-border: var(--dc-brand);
 
   --dc-button-disable-text: rgba(60, 60, 60, 0.12);
   --dc-button-disable-border: rgba(60, 60, 60, 0.12);

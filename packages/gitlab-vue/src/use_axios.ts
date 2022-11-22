@@ -5,6 +5,8 @@ import type { AxiosRequestConfig } from 'axios'
 
 import { ref } from 'vue'
 
+const neverPromise = new Promise<never>(() => void 0)
+
 export type AxiosFetcher<U = any, T = any> = (
   data: U | undefined,
   config: AxiosRequestConfig,
@@ -55,9 +57,10 @@ export const useAxios = <U = any, T = any>(fetcher: AxiosFetcher<U, T>) => {
       const result = await fetcher(args, config)
       return result
     } catch (ex) {
-      if (isCancel(ex)) return
+      if (isCancel(ex)) return neverPromise
 
       error.value = (ex as Error).message
+      throw error
     } finally {
       loading.value = false
     }
