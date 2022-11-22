@@ -1,0 +1,19 @@
+:root {
+  --dc-border: rgba(60, 60, 60, 0.12);
+
+  --dc-icon-fill: #1385f0;
+
+  --dc-button-primary-text: #1385f0;
+  --dc-button-primary-border: #1385f0;
+
+  --dc-button-default-text: #1385f0;
+  --dc-button-default-border: #1385f0;
+
+  --dc-button-disable-text: rgba(60, 60, 60, 0.12);
+  --dc-button-disable-border: rgba(60, 60, 60, 0.12);
+
+  --dc-textarea-border: rgba(60, 60, 60, 0.12);
+  --dc-textarea-focus-border: #3da0fc;
+  --dc-textarea-placeholder-text: rgba(60, 60, 60, 0.33);
+  --dc-textarea-disable-background: #f2f2f2;
+}

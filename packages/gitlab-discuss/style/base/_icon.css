@@ -1,0 +1,47 @@
+.discuss-icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: var(--dc-icon-fill);
+  overflow: hidden;
+}
+
+.discuss-icon-loading {
+  animation: discuss-keyframe-rotation 1s linear infinite;
+}
+
+@-moz-keyframes discuss-keyframe-rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes discuss-keyframe-rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@-o-keyframes discuss-keyframe-rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes discuss-keyframe-rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

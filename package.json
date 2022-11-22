@@ -1,11 +1,11 @@
 {
-  "name": "github-sdk-for-javascript",
+  "name": "discuss",
   "private": true,
   "version": "0.0.1",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
+    "dev": "pnpm --filter=demo dev",
     "build": "pnpm -r build",
-    "watch": "pnpm -r watch",
     "clean": "pnpm -r clean",
     "lint": "pnpm _phase:lint && pnpm _phase:format --check && pnpm _phase:cspell -s --cache",
     "format": "pnpm _phase:format --write",
@@ -38,15 +38,6 @@
   "engines": {
     "node": ">=14"
   },
-  "author": {
-    "name": "zhengxs2018",
-    "url": "https://www.mediinfo.cn"
-  },
-  "maintainers": [
-    {
-      "name": "阿森",
-      "email": "zhengxiansen@mediinfo.com.cn"
-    }
-  ],
-  "license": "SEE LICENSE IN LICENSE"
+  "author": "zhengxs2018",
+  "license": "MIT"
 }

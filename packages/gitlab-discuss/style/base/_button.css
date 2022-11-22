@@ -1,0 +1,22 @@
+.discuss-button {
+  padding: 10px 20px;
+  font-size: 1.05;
+  font-weight: bold;
+  color: var(--dc-button-default-text);
+  border: 2px solid var(--dc-button-default-border);
+  background-color: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  outline: none;
+}
+
+.discuss-button:disabled {
+  cursor: not-allowed;
+  color: var(--dc-button-disable-text);
+  border-color: var(--dc-button-disable-border);
+}
+
+.discuss-button:not(:disabled).discuss-button-primary {
+  color: var(--dc-button-primary-text);
+  border-color: var(--dc-button-primary-border);
+}

@@ -1,0 +1,24 @@
+.discuss {
+  margin-top: 20px;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.discuss-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--vp-c-divider-light);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.discuss-header-powered-by,
+.discuss-header-right {
+  float: right;
+}
+
+.clearfix::after {
+  display: block;
+  clear: both;
+  content: '';
+}

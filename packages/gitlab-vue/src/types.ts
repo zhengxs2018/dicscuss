@@ -5,4 +5,4 @@ import type { Gitlab } from '@zhengxs/gitlab-api'
 export type MaybeRef<T> = T | Ref<T>
 
 /** @internal */
-export type IDRef = MaybeRef<Gitlab.ID | undefined>
+export type IDRef = Ref<Gitlab.ID | undefined> | Gitlab.ID
