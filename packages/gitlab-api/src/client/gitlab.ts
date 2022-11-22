@@ -170,7 +170,7 @@ export class GitlabSDK {
     const searchParams = new URLSearchParams(window.location.search)
     if (searchParams.has('code') === true) {
       return this.exchangeCode({
-        state: searchParams.get('code')!,
+        state: searchParams.get('state')!,
         code: searchParams.get('code')!,
       })
     }
