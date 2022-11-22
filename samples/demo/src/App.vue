@@ -3,7 +3,7 @@ import { Discuss } from '@zhengxs/gitlab-discuss'
 </script>
 
 <template>
-<Discuss projectId="375" issueId="1" />
+  <Discuss projectId="375" issueId="1" />
 </template>
 
 <style>

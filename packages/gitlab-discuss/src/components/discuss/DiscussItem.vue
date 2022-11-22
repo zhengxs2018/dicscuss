@@ -6,7 +6,7 @@ import { Gitlab } from '@zhengxs/gitlab-api'
 import { useCurrentUser } from '@zhengxs/gitlab-vue'
 
 import DiscussAvatar from '../base/DiscussAvatar.vue'
-import DiscussIcon from '../base/DiscussIcon.vue'
+import DiscussMarkdownPreview from './DiscussMarkdownPreview.vue'
 
 defineProps({
   item: {
@@ -45,7 +45,7 @@ const { data: currentUser } = useCurrentUser()
       </div>
 
       <div class="discuss-comment-main">
-        {{ item.body }}
+        <DiscussMarkdownPreview :content="item.body"/>
       </div>
 
       <div class="discuss-comment-footer">

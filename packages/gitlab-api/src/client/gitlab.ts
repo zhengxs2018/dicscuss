@@ -140,6 +140,18 @@ export class GitlabSDK {
     }
   }
 
+  async markdown(text: string, config?: AxiosRequestConfig): Promise<string> {
+    const response = await this.client.post(
+      `${this.endpoint}/markdown`,
+      {
+        text,
+        gfm: true,
+      },
+      config,
+    )
+    return response.data.html
+  }
+
   static getInstance() {
     return setupGitlab.get()
   }

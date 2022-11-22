@@ -8,5 +8,6 @@ export * from './use_project'
 export * from './use_issues'
 export * from './use_issue'
 export * from './use_notes'
+export * from './use_markdown_preview'
 
 export * from './types'
