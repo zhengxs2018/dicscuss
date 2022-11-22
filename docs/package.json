@@ -1,0 +1,20 @@
+{
+  "name": "docs",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "vitepress dev src",
+    "build": "vitepress build src",
+    "serve": "vitepress serve src"
+  },
+  "packageManager": "pnpm@7.0.0",
+  "dependencies": {
+    "@zhengxs/gitlab-api": "workspace:*",
+    "@zhengxs/gitlab-discuss": "workspace:*",
+    "@zhengxs/gitlab-vue": "workspace:*",
+    "vitepress": "^1.0.0-alpha.29",
+    "vue": "^3.2.39"
+  },
+  "author": "zhengxs2018",
+  "license": "MIT"
+}
