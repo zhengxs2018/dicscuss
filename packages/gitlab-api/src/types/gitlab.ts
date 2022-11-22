@@ -33,6 +33,7 @@ export namespace Gitlab {
   }
 
   export type Issue = {
+    id: ID
     iid: ID
     title: string
     description: string

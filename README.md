@@ -33,7 +33,6 @@
 - [Vitepress](https://vitepress.vuejs.org/)
 - And more.
 
-
 ## License
 
 MIT

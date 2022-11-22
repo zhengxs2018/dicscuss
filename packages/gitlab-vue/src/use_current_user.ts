@@ -1,14 +1,15 @@
-import { provide, inject, ref, Ref, readonly } from 'vue'
+import { ref, Ref, readonly, watchEffect } from 'vue'
 
 import { Gitlab } from '@zhengxs/gitlab-api'
 
-import { useGitlab } from './use_gitlab'
 import { useAxios } from './use_axios'
+import { useGitlab } from './use_gitlab'
+import { useSingleton } from './use_singleton'
 
 /** @internal */
 const GITLAB_CURRENT_USER_KEY = Symbol.for('gitlab#currentUser')
 
-export type CurrentUserContext = {
+export type CurrentUserProvider = {
   loading: Ref<boolean>
   loaded: Ref<boolean>
   error: Ref<string | null>
@@ -28,49 +29,44 @@ const unknownUser = readonly<Gitlab.User>({
   created_at: '',
 })
 
-/** @internal */
-const createCurrentUserContext = (): CurrentUserContext => {
-  const { client, isAuthenticated } = useGitlab()
+// TODO(zhengxs2018) 允许非单例模式
+export const useCurrentUser = (): CurrentUserProvider => {
+  return useSingleton(GITLAB_CURRENT_USER_KEY, () => {
+    const { sdk, isAuthenticated } = useGitlab()
 
-  const data = ref<Gitlab.User>(unknownUser)
-  const loaded = ref<boolean>(false)
-  const { loading, send, error } = useAxios<void>(async (_, config) => {
-    const user = await client.getUser(config)
+    const data = ref<Gitlab.User>(unknownUser)
+    const loaded = ref<boolean>(false)
+    const { loading, send, cancel, error } = useAxios<void>(
+      async (_, config) => {
+        const user = await sdk.getUser(config)
 
-    loaded.value = true
-    data.value = user
+        loaded.value = true
+        data.value = user
+      },
+    )
+
+    /** @internal */
+    const removeUser = () => {
+      data.value = unknownUser
+      loaded.value = false
+
+      return Promise.resolve()
+    }
+
+    const refresh = () => (isAuthenticated() ? send() : removeUser())
+
+    watchEffect(onCleanup => {
+      onCleanup(() => cancel())
+      refresh()
+    })
+
+    return {
+      loading,
+      loaded,
+      error,
+      data,
+      refresh,
+      removeUser,
+    }
   })
-
-  /** @internal */
-  const removeUser = () => {
-    data.value = unknownUser
-    loaded.value = false
-
-    return Promise.resolve()
-  }
-
-  const refresh = () => (isAuthenticated() ? send() : removeUser())
-
-  return {
-    loading,
-    loaded,
-    error,
-    data,
-    refresh,
-    removeUser,
-  }
-}
-
-export const useCurrentUser = () => {
-  let instance = inject<CurrentUserContext | null>(
-    GITLAB_CURRENT_USER_KEY,
-    null,
-  )
-  if (instance) return instance
-
-  instance = createCurrentUserContext()
-
-  provide(GITLAB_CURRENT_USER_KEY, instance)
-
-  return instance
 }

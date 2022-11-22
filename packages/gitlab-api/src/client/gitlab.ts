@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 
-import { random, asyncNever } from '../utils'
+import { random, singleton, asyncNever } from '../utils'
 import type {
   Gitlab,
   GitlabSDKConfig,
@@ -79,6 +79,11 @@ export class GitlabSDK {
     return this.token.isValid()
   }
 
+  unstable__isSigninRedirect() {
+    const hash = new URLSearchParams(window.location.hash.slice(1))
+    return hash.has('access_token')
+  }
+
   async getUser(config?: AxiosRequestConfig): Promise<Gitlab.User> {
     const response = await this.client.get(`${this.endpoint}/user`, config)
     return response.data
@@ -103,17 +108,43 @@ export class GitlabSDK {
     return asyncNever
   }
 
-  async signinRedirectCallback(): Promise<false | never> {
+  async signinRedirectCallback(url?: string): Promise<never> {
     const hash = new URLSearchParams(window.location.hash.slice(1))
-    if (!hash.has('access_token')) return false
+    if (hash.has('access_token') === false) {
+      throw new Error('无效的 token')
+    }
 
     const state = hash.get('state')!
     const accessToken = hash.get('access_token')!
 
     this.token.restore(accessToken)
 
-    window.location.replace(this.userStore.get(state)!)
+    const callbackURL = url || this.userStore.get(state)
+
+    this.userStore.remove(state)
+
+    window.location.replace(callbackURL || '/')
 
     return asyncNever
   }
+
+  async loginWithRedirect(
+    args?: GitlabSDKSigninRedirectArgs,
+  ): Promise<void | never> {
+    if (this.unstable__isSigninRedirect()) {
+      return this.signinRedirectCallback()
+    }
+
+    if (this.unstable__isAuthenticated() === false) {
+      return this.signinRedirect(args)
+    }
+  }
+
+  static getInstance() {
+    return setupGitlab.get()
+  }
 }
+
+export const setupGitlab = singleton(
+  (config: GitlabSDKConfig) => new GitlabSDK(config),
+)

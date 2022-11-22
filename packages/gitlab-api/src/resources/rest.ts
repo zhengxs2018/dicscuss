@@ -1,4 +1,4 @@
-import type { AxiosInstance } from 'axios'
+import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 import type { Gitlab } from '../types'
 
 export type RestOptions = {
@@ -15,8 +15,9 @@ export class Rest<Resource = any> {
     this.endpoint = `${options.endpoint}/${name}`
   }
 
-  async index(params?: Gitlab.Filter) {
+  async index(params?: Gitlab.Filter, config?: AxiosRequestConfig) {
     const response = await this.client.get<Resource[]>(this.endpoint, {
+      ...config,
       params,
     })
 

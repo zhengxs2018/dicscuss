@@ -1,7 +1,7 @@
 // TODO(zhengxs2018) axios 的导出类型有错误
 // @ts-ignore
 import { isCancel } from 'axios'
-import type { AxiosRequestConfig, Canceler } from 'axios'
+import type { AxiosRequestConfig } from 'axios'
 
 import { ref } from 'vue'
 
@@ -18,22 +18,28 @@ export type AxiosRequest<U = any, T = any> = (
 export const withCancelToken = <U = any, T = any>(
   fetcher: AxiosFetcher<U, T>,
 ) => {
-  let abort: Canceler | null
+  let abortCtrl: AbortController | null
 
   const send: AxiosRequest<U, T> = (data, config) => {
     cancel() // 主动取消
 
     const controller = new AbortController()
 
-    abort = controller.abort
+    abortCtrl = controller
 
-    return fetcher(data, { ...config, signal: controller.signal })
+    const promise = fetcher(data, { ...config, signal: controller.signal })
+
+    promise.finally(() => {
+      abortCtrl = null
+    })
+
+    return promise
   }
 
   const cancel = (message?: string) => {
-    if (abort) {
-      abort(message)
-      abort = null
+    if (abortCtrl) {
+      abortCtrl.abort(message)
+      abortCtrl = null
     }
   }
 

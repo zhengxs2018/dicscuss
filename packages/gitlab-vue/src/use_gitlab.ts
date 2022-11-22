@@ -1,63 +1,46 @@
-import { ref, Ref, provide, inject } from 'vue'
-import { GitlabSDKConfig, GitlabSDK } from '@zhengxs/gitlab-api'
+import { ref, Ref } from 'vue'
+import { GitlabSDK } from '@zhengxs/gitlab-api'
 
-import { singleton } from './util'
+import { useSingleton } from './use_singleton'
 
 /** @internal */
 const GITLAB_INJECT_KEY = Symbol.for('gitlab')
 
-/**
- * TODO(zhengxs2018) 需要支持多实例
- */
-export const setupGitlab = singleton(
-  (config: GitlabSDKConfig) => new GitlabSDK(config),
-)
-
 export type GitlabProvider = {
-  client: GitlabSDK
+  sdk: GitlabSDK
   isLoggedIn: Ref<boolean>
   login: () => void
   isAuthenticated: () => boolean
 }
 
-/** @internal */
-const createGitlabProvider = (config: GitlabSDKConfig): GitlabProvider => {
-  // TODO 允许非单例模式
-  const client = setupGitlab(config)
+export const useGitlab = (): GitlabProvider => {
+  return useSingleton(GITLAB_INJECT_KEY, () => {
+    const sdk = GitlabSDK.getInstance()
+    if (!sdk) throw new Error(`无效的配置`)
 
-  /** @internal */
-  const isLoggedIn = ref<boolean>(false)
+    const isLoggedIn = ref<boolean>(sdk.unstable__isAuthenticated())
 
-  const isAuthenticated = () => {
-    const status = client.unstable__isAuthenticated()
+    const isAuthenticated = () => {
+      const status = sdk.unstable__isAuthenticated()
 
-    if (isLoggedIn.value !== status) {
-      isLoggedIn.value = status
+      if (isLoggedIn.value !== status) {
+        isLoggedIn.value = status
+      }
+
+      return status
     }
 
-    return status
-  }
+    const login = () => {
+      if (isAuthenticated()) return
 
-  const login = () => {
-    if (isAuthenticated()) return
+      sdk.signinRedirect()
+    }
 
-    client.signinRedirect()
-  }
-
-  const provider: GitlabProvider = {
-    client,
-    isLoggedIn,
-    isAuthenticated,
-    login,
-  }
-
-  provide(GITLAB_INJECT_KEY, provider)
-
-  return provider
-}
-
-export const useGitlab = (config?: GitlabSDKConfig) => {
-  return config
-    ? createGitlabProvider(config)
-    : inject<GitlabProvider>(GITLAB_INJECT_KEY)!
+    return {
+      sdk,
+      isLoggedIn,
+      isAuthenticated,
+      login,
+    }
+  })
 }

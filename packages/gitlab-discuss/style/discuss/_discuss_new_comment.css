@@ -1,0 +1,67 @@
+.discuss-new-comment {
+  border-bottom: 1px solid var(--dc-border);
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.discuss-new-comment-avatar {
+  float: left;
+}
+
+.discuss-new-comment-body {
+  position: relative;
+}
+
+@media screen and (max-width: 576px) {
+  .discuss-new-comment-body {
+    margin-left: 60px;
+  }
+}
+@media screen and (min-width: 577px) {
+  .discuss-new-comment-body {
+    margin-left: 70px;
+  }
+}
+
+.discuss-current-user {
+  color: #a3aab1;
+}
+
+.discuss-current-user .discuss-logout {
+  cursor: pointer;
+  text-decoration: underline;
+  color: #a3aab1;
+  font-weight: normal;
+}
+
+.discuss-new-comment-footer {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.discuss-new-comment-footer::after {
+  display: block;
+  clear: both;
+  content: '';
+}
+
+@media screen and (max-width: 576px) {
+  .discuss-new-comment-footer {
+    text-align: center;
+  }
+
+  .discuss-new-comment-operations {
+    margin-top: 10px;
+  }
+}
+
+@media screen and (min-width: 577px) {
+  .discuss-new-comment-footer {
+    margin-left: 70px;
+    text-align: right;
+  }
+
+  .discuss-current-user {
+    float: left;
+  }
+}

@@ -14,3 +14,22 @@ export const noop = () => void 0
 
 /** @internal */
 export const asyncNever = new Promise<never>(noop)
+
+/** @internal */
+export const singleton = <U = any, T = any>(factory: (options: U) => T) => {
+  let instance: T | undefined
+
+  function initial(options: U) {
+    if (instance) return instance
+    instance = factory(options)
+    return instance
+  }
+
+  initial.get = (): T => {
+    if (instance) return instance
+
+    throw new Error('请先初始化')
+  }
+
+  return initial
+}

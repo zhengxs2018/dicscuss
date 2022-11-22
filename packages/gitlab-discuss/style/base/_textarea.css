@@ -1,0 +1,27 @@
+.discuss-textarea {
+  resize: none;
+  outline: none;
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  background-color: #f8f8f8;
+  border: 1px solid var(--dc-textarea-border);
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.discuss-textarea:disabled {
+  cursor: not-allowed;
+  background-color: var(--dc-textarea-disable-background);
+}
+
+.discuss-textarea:focus {
+  background-color: #ffffff;
+  border-color: var(--dc-textarea-focus-border);
+  box-shadow: 0 0 1px 1px var(--dc-textarea-focus-border);
+}
+
+.discuss-textarea::placeholder {
+  color: var(--dc-textarea-placeholder-text);
+}

@@ -1,83 +1,89 @@
-import { ref, Ref, provide, inject } from 'vue'
-import type { Gitlab, Notes } from '@zhengxs/gitlab-api'
+import { ref, Ref, computed } from 'vue'
+import { Gitlab, Notes } from '@zhengxs/gitlab-api'
 
-import { useIssue } from './use_issues'
+import { useActiveIssue } from './use_issue'
+import { useSingleton } from './use_singleton'
 
 /** @internal */
 const GITLAB_NOTES_INJECT_KEY = Symbol.for('gitlab#notes')
 
-export type NotesContext = {
+export type NotesProvider = {
   filter: Ref<Gitlab.Filter>
   items: Ref<Gitlab.Note[]>
   total: Ref<number>
-  rest: Ref<Notes | undefined>
   search: (args?: Omit<Gitlab.Filter, 'per_page'>) => Promise<void>
   next: () => Promise<void>
   create: (payload: { body: string }) => Promise<any>
 }
 
-/** @internal*/
-const createNotesContext = (): NotesContext => {
-  const { notes: rest } = useIssue()
+const createNotesRest = () => {
+  const { rest, id } = useActiveIssue()
 
-  const filter = ref<Gitlab.Filter>({
-    page: 1,
-    per_page: 10,
-    order_by: 'created_at',
-    sort: 'desc',
+  return computed<Notes | undefined>(() => {
+    const iid = id.value
+    const prest = rest.value
+
+    if (iid && prest) {
+      return new Notes({
+        client: prest.client,
+        endpoint: `${prest.endpoint}/${iid}`,
+      })
+    }
   })
-
-  const items = ref<Gitlab.Note[]>([])
-  const total = ref(0)
-
-  const search = async () => {
-    const params = {
-      ...filter.value,
-      per_page: 1,
-    }
-
-    const res = await rest.value!.index(params)
-
-    filter.value = params
-    items.value = res.items
-    total.value = res.total
-  }
-
-  const next = async () => {
-    const params = {
-      ...filter.value,
-      per_page: filter.value.per_page + 1,
-    }
-
-    const res = await rest.value!.index(params)
-
-    filter.value = params
-    items.value = res.items
-    total.value = res.total
-  }
-
-  const create = async (payload: { body: string }) => {
-    return rest.value?.create(payload)
-  }
-
-  return {
-    rest,
-    filter,
-    items,
-    total,
-    search,
-    create,
-    next,
-  }
 }
 
-export const useNotes = (): NotesContext => {
-  let instance = inject<NotesContext | null>(GITLAB_NOTES_INJECT_KEY, null)
-  if (instance) return instance
+export const useActiveNotes = () => {
+  return useSingleton(GITLAB_NOTES_INJECT_KEY, (): NotesProvider => {
+    const rest = createNotesRest()
 
-  instance = createNotesContext()
+    const filter = ref<Gitlab.Filter>({
+      page: 1,
+      per_page: 10,
+      order_by: 'created_at',
+      sort: 'desc',
+    })
 
-  provide(GITLAB_NOTES_INJECT_KEY, instance)
+    const items = ref<Gitlab.Note[]>([])
+    const total = ref(0)
 
-  return instance
+    const search = async () => {
+      const params = {
+        ...filter.value,
+        page: 1,
+      }
+
+      const res = await rest.value!.index(params)
+
+      filter.value = params
+      items.value = res.items
+      total.value = res.total
+    }
+
+    const next = async () => {
+      const args = filter.value
+      const params = {
+        ...args,
+        page: args.page + 1,
+      }
+
+      const res = await rest.value!.index(params)
+
+      filter.value = params
+      items.value = items.value.concat(res.items)
+      total.value = res.total
+    }
+
+    const create = async (payload: { body: string }) => {
+      return rest.value!.create(payload)
+    }
+
+    return {
+      filter,
+      items,
+      total,
+      search,
+      create,
+      next,
+    }
+  })
 }
