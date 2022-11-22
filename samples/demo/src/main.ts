@@ -11,10 +11,8 @@ const gitlab = setupGitlab({
 })
 
 await gitlab.loginWithRedirect({
-  // 支在纯 web 端的应用中
-  // 用 code 交换 token 不是很好
-  // 推荐使用 token 模式
-  responseType: 'token'
+  // 支持 token 和 code，默认 code
+  responseType: import.meta.env.VITE_APP_GITLAB_RESPONSE_TYPE
 })
 
 if (import.meta.env.DEV) {
