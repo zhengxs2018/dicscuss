@@ -1,6 +1,6 @@
 {
   "name": "@zhengxs/gitlab-discuss",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "type": "module",
   "main": "./dist/gitlab-discuss.js",
   "types": "./types/index.d.ts",
@@ -10,7 +10,10 @@
   },
   "files": [
     "dist/*",
-    "types/*"
+    "types/*",
+    "style/*",
+    "theme.css",
+    "index.css"
   ],
   "scripts": {
     "build": "vue-tsc --declaration --emitDeclarationOnly && vite build",
