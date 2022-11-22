@@ -1,10 +1,11 @@
 import type { StateStore } from './storage'
 
 export type GitlabSDKConfig = {
-  clientId: string
   authority?: string
-  redirectURI?: string | URL
   apiVersion?: string | null
+  clientId: string
+  redirectURI?: string | URL
+  postLogoutRedirectURI?: string | URL
   userStore?: StateStore
 }
 

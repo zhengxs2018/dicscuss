@@ -10,6 +10,7 @@ export type GitlabProvider = {
   sdk: GitlabSDK
   isLoggedIn: Ref<boolean>
   login: () => void
+  logout: () => void
   isAuthenticated: () => boolean
 }
 
@@ -36,11 +37,17 @@ export const useGitlab = (): GitlabProvider => {
       sdk.signinRedirect()
     }
 
+    const logout = () => {
+      isLoggedIn.value = false
+      sdk.signoutRedirect()
+    }
+
     return {
       sdk,
       isLoggedIn,
       isAuthenticated,
       login,
+      logout
     }
   })
 }

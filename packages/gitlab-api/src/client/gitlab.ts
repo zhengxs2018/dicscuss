@@ -18,6 +18,7 @@ const normalizeOptions = ({
   apiVersion = 'v4',
   clientId,
   redirectURI = '/connect/gitlab/callback.html',
+  postLogoutRedirectURI = '/',
   userStore = new WebStorageStateStore({
     store: window.sessionStorage,
   }),
@@ -26,6 +27,7 @@ const normalizeOptions = ({
   apiVersion,
   clientId,
   redirectURI,
+  postLogoutRedirectURI,
   userStore,
 })
 
@@ -126,6 +128,12 @@ export class GitlabSDK {
     window.location.replace(callbackURL || '/')
 
     return asyncNever
+  }
+
+  signoutRedirect() {
+    const postLogoutRedirectURI = this.options.postLogoutRedirectURI
+    this.userStore.clear()
+    window.location.replace(postLogoutRedirectURI.toString())
   }
 
   async loginWithRedirect(
